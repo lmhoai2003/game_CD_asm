@@ -60,7 +60,11 @@ public class PlayerMovement : NetworkBehaviour
         //nhấn cách để nhảy
         if (Input.GetKeyDown(KeyCode.Space))
         {
-            velocity.y = Mathf.Sqrt(-2f * gravity * 1.5f);
+            if(_controller.transform.position.y <= 20f) 
+            {
+                velocity.y = Mathf.Sqrt(-3f * gravity * 3f);
+            }
+
         }
         if (Input.GetMouseButtonDown(1))
         {
@@ -68,7 +72,7 @@ public class PlayerMovement : NetworkBehaviour
             animator.SetTrigger("danh");
             //xoay nhân vật theo hướng camera
             Vector3 cameraForward = Camera.main.transform.forward;
-            cameraForward.y = 0; // Đảm bảo không có chuyển động theo trục Y
+            cameraForward.y = 0; 
             cameraForward.Normalize();
             transform.rotation = Quaternion.LookRotation(cameraForward);
 

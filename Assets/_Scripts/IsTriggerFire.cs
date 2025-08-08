@@ -10,7 +10,7 @@ public class IsTriggerFire : MonoBehaviour
         if (sphereCollider != null)
         {
             sphereCollider.isTrigger = false; // Tắt trước
-            StartCoroutine(EnableTriggerAfterDelay(1f)); // Bật sau 1s
+            StartCoroutine(EnableTriggerAfterDelay(0.5f)); // Bật sau 1s
         }
     }
 

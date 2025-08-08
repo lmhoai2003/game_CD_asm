@@ -5,6 +5,8 @@ TagManager:
   serializedVersion: 3
   tags:
   - emi
+  - Emeny
+  - viendan
   layers:
   - Default
   - TransparentFX
