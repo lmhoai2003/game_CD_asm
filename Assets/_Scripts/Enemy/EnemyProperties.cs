@@ -6,37 +6,36 @@ using TMPro;
 public class EnemyProperties : NetworkBehaviour
 {
     [Networked, OnChangedRender(nameof(OnHPChangedEnemy))]
-    public int _hpPlayer { get; set; } = 100;
+    private int _hpEnemy { get; set; } = 100;
 
     public TextMeshPro hpText;
-
-
     public override void Spawned()
     {
-        hpText.text = _hpPlayer.ToString();
+        hpText.text = _hpEnemy.ToString();
     }
 
     public void OnHPChangedEnemy()
     {
-        hpText.text = _hpPlayer.ToString();
+        hpText.text = _hpEnemy.ToString();
     }
 
     public void OnTriggerEnter(Collider other)
     {
         if (other.CompareTag("viendan"))
         {
-            _hpPlayer -= 10;
-            if (_hpPlayer <= 0)
+            _hpEnemy -= 10;
+            if (_hpEnemy <= 0)
             {
-                _hpPlayer = 0;
-
+                _hpEnemy = 0;
+                // thực hiện xóa enemy 
+                Runner.Despawn(Object);
             }
-            Debug.Log("Enemy va cham: " + _hpPlayer);
-
+            Debug.Log("Enemy va cham: " + _hpEnemy);
         }
     }
 
-    private void Update()
+
+    public override void FixedUpdateNetwork()
     {
         if (hpText != null)
         {
@@ -45,6 +44,7 @@ public class EnemyProperties : NetworkBehaviour
         }
 
     }
+
 }
 
 
