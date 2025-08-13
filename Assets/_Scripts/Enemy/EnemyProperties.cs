@@ -2,16 +2,20 @@ using UnityEngine;
 using Fusion;
 using System;
 using TMPro;
+using System.Collections;
 
 public class EnemyProperties : NetworkBehaviour
 {
     [Networked, OnChangedRender(nameof(OnHPChangedEnemy))]
-    private int _hpEnemy { get; set; } = 100;
+    public int _hpEnemy { get; set; } = 10;
 
     public TextMeshPro hpText;
+    public TextMeshProUGUI textThongBaoHaGuc;
+    public GameObject effectHit;
     public override void Spawned()
     {
         hpText.text = _hpEnemy.ToString();
+        textThongBaoHaGuc = GameObject.Find("tmp_haguc").GetComponent<TextMeshProUGUI>();
     }
 
     public void OnHPChangedEnemy()
@@ -24,14 +28,23 @@ public class EnemyProperties : NetworkBehaviour
         if (other.CompareTag("viendan"))
         {
             _hpEnemy -= 10;
+            effectHit.gameObject.SetActive(true);
+            StartCoroutine(tathieuungbantrungquai(0.3f));
             if (_hpEnemy <= 0)
             {
                 _hpEnemy = 0;
                 // thực hiện xóa enemy 
                 Runner.Despawn(Object);
+                
             }
             Debug.Log("Enemy va cham: " + _hpEnemy);
         }
+    }
+
+    private IEnumerator tathieuungbantrungquai(float time)
+    {
+        yield return new WaitForSeconds(time);
+        effectHit.gameObject.SetActive(false);
     }
 
 
@@ -44,6 +57,7 @@ public class EnemyProperties : NetworkBehaviour
         }
 
     }
+    
 
 }
 

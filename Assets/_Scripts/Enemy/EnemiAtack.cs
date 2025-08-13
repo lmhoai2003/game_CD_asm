@@ -7,7 +7,7 @@ public class EnemiAtack : NetworkBehaviour
 {
     public NetworkObject bulletPrefabs;
     public Transform firePoint;
-    public float shootCooldown = 2f;
+    public float shootCooldown = 5f;
     public float detectionRange = 20f;
     private float shootTimer;
     
@@ -33,6 +33,15 @@ public class EnemiAtack : NetworkBehaviour
                 minDistance = distance;
                 target = t;
             }
+        }
+
+        // Luôn xoay về player gần nhất
+        Vector3 lookDir = (target.transform.position - transform.position).normalized;
+        lookDir.y = 0; // giữ hướng xoay trên mặt phẳng
+        if (lookDir != Vector3.zero)
+        {
+            Quaternion lookRotation = Quaternion.LookRotation(lookDir);
+            transform.rotation = Quaternion.Slerp(transform.rotation, lookRotation, Time.deltaTime * 5f);
         }
 
         if (target != null && minDistance <= distance)
