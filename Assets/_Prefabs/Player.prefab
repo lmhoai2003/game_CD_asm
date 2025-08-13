@@ -4208,6 +4208,7 @@ MonoBehaviour:
   inputFieldMessage: {fileID: 0}
   chatBackground: {fileID: 0}
   btnOpenChat: {fileID: 0}
+  movementScript: {fileID: 7290157816885031150}
 --- !u!114 &6632543221064516017
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -4237,7 +4238,7 @@ AudioSource:
   OutputAudioMixerGroup: {fileID: 0}
   m_audioClip: {fileID: 8300000, guid: e515705ea6c2a20468bba5ef2f102928, type: 3}
   m_Resource: {fileID: 8300000, guid: e515705ea6c2a20468bba5ef2f102928, type: 3}
-  m_PlayOnAwake: 1
+  m_PlayOnAwake: 0
   m_Volume: 1
   m_Pitch: 1
   Loop: 0

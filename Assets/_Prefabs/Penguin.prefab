@@ -174,7 +174,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   bulletPrefabs: {fileID: 6339676092503196882, guid: 04008b9e2691880449ba93042273772c, type: 3}
   firePoint: {fileID: 4038302084254495792}
-  shootCooldown: 2
+  shootCooldown: 4
   detectionRange: 20
   navMeshAgent: {fileID: 1076361179954361102}
   targets: []
