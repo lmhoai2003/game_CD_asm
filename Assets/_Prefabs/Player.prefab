@@ -377,7 +377,7 @@ GameObject:
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
-  m_IsActive: 1
+  m_IsActive: 0
 --- !u!224 &1402817170449885473
 RectTransform:
   m_ObjectHideFlags: 0
@@ -466,7 +466,7 @@ GameObject:
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
-  m_IsActive: 1
+  m_IsActive: 0
 --- !u!224 &520396552701393008
 RectTransform:
   m_ObjectHideFlags: 0
@@ -1098,7 +1098,7 @@ RectTransform:
   m_Father: {fileID: 1402817170449885473}
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
   m_AnchorMin: {x: 0, y: 0}
-  m_AnchorMax: {x: 0, y: 0}
+  m_AnchorMax: {x: 0.48599997, y: 1}
   m_AnchoredPosition: {x: 0, y: -0.000030517578}
   m_SizeDelta: {x: 0, y: -10}
   m_Pivot: {x: 0.5, y: 0.5}
@@ -3327,7 +3327,7 @@ RectTransform:
   m_Father: {fileID: 520396552701393008}
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
   m_AnchorMin: {x: 0, y: 0}
-  m_AnchorMax: {x: 0, y: 0}
+  m_AnchorMax: {x: 1, y: 1}
   m_AnchoredPosition: {x: 0, y: -0.000030517578}
   m_SizeDelta: {x: 0, y: -10}
   m_Pivot: {x: 0.5, y: 0.5}
@@ -4023,12 +4023,13 @@ MonoBehaviour:
   __hpPlayer: 100
   hpText: {fileID: 9162280058223867394}
   animator: {fileID: 595669424582060220}
-  hpSlider: {fileID: 6950373166696126659}
+  _hpSliderScene: {fileID: 0}
   nameTextUI: {fileID: 6033281452600408900}
   imageThua: {fileID: 6709808362846370366}
   imageThang: {fileID: 7581117834979778157}
   movementScript: {fileID: 7290157816885031150}
   loadSceneHomeButton: {fileID: 2908219388346492149}
+  lowHpOverlay: {fileID: 0}
 --- !u!114 &8621322640817681406
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -4043,12 +4044,12 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   bulletPrefabs: {fileID: 4824975652445863619, guid: 428fc129fac69264fadafe21e5d063d5, type: 3}
   firePoint: {fileID: 896584664597444470}
-  energySlider: {fileID: 6178761233416114883}
   audioSource: {fileID: 3754833437355106061}
   delayMana: 1
   timeMana: 0.1
-  mana: 2
+  mana: 100
   thongbaoText: {fileID: 3647953097931593849}
+  _manaPlayerSlider: {fileID: 0}
 --- !u!114 &389100311414911215
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -4171,7 +4172,7 @@ MonoBehaviour:
   m_PrefabInstance: {fileID: 0}
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 7203289513955639889}
-  m_Enabled: 1
+  m_Enabled: 0
   m_EditorHideFlags: 0
   m_Script: {fileID: 11500000, guid: 4075fe8e4a6093346b4fb94297cfde1e, type: 3}
   m_Name: 

@@ -13,7 +13,7 @@ public class PlayerProperties : NetworkBehaviour
 
     public TextMeshPro hpText;
     [SerializeField] private Animator animator;
-    [SerializeField] private Slider hpSlider;
+    // [SerializeField] private Slider hpSlider;
 
     [SerializeField] private Slider _hpSliderScene;
     [SerializeField] private TextMeshProUGUI nameTextUI;
@@ -33,7 +33,7 @@ public class PlayerProperties : NetworkBehaviour
         if (Object.HasInputAuthority)
         {
             if (hpText != null) hpText.text = _hpPlayer.ToString();
-            if (hpSlider != null) hpSlider.value = _hpPlayer;
+            // if (hpSlider != null) hpSlider.value = _hpPlayer;
             _hpSliderScene.value = _hpPlayer;
 
             // Kiểm tra HP thấp

@@ -8,7 +8,7 @@ public class GunScript : NetworkBehaviour
 {
     public NetworkObject bulletPrefabs;
     public Transform firePoint;
-    public Slider energySlider;
+    // public Slider energySlider;
     public AudioSource audioSource; // AudioSource gắn trên súng hoặc nhân vật
 
     private int maxEnergy = 100;
@@ -21,27 +21,20 @@ public class GunScript : NetworkBehaviour
     [SerializeField] private TextMeshProUGUI thongbaoText;
     [SerializeField] private Slider _manaPlayerSlider;
 
-    // private void Start()
-    // {
-    //     currentEnergy = maxEnergy;
-    //     if (energySlider != null)
-    //     {
-    //         energySlider.maxValue = maxEnergy;
-    //         energySlider.value = currentEnergy;
-    //     }
-    // }
+
     public override void Spawned()
     {
 
-        // _manaPlayerSlider = GameObject.Find("manaPlayer").GetComponent<Slider>();
-        // _manaPlayerSlider.value = maxEnergy;
+        _manaPlayerSlider = GameObject.Find("manaPlayer").GetComponent<Slider>();
+
+        _manaPlayerSlider.value = maxEnergy;
 
 
         currentEnergy = maxEnergy;
-        if (energySlider != null)
+        if (_manaPlayerSlider != null)
         {
-            energySlider.maxValue = maxEnergy;
-            energySlider.value = currentEnergy;
+            _manaPlayerSlider.maxValue = maxEnergy;
+            _manaPlayerSlider.value = currentEnergy;
         }
     }
 
@@ -71,6 +64,29 @@ public class GunScript : NetworkBehaviour
         }
     }
 
+    // void Shoot()
+    // {
+    //     // Spawn đạn
+    //     var bullet = Runner.Spawn(bulletPrefabs, firePoint.position, firePoint.rotation);
+
+    //     // Phát tiếng bắn từ AudioSource
+    //     if (audioSource != null)
+    //     {
+    //         audioSource.Play(); // Âm thanh đã gắn sẵn trong AudioSource
+    //     }
+
+    //     // Thêm lực cho đạn
+    //     if (Camera.main != null)
+    //     {
+    //         Vector3 cameraForward = Camera.main.transform.forward;
+    //         cameraForward.y = 0;
+    //         cameraForward.Normalize();
+    //         bullet.GetComponent<Rigidbody>().AddForce(cameraForward * 20f, ForceMode.Impulse);
+
+    //         StartCoroutine(DespawnBulletAfterDelay(bullet, 3f));
+    //     }
+    // }
+
     void Shoot()
     {
         // Spawn đạn
@@ -79,19 +95,11 @@ public class GunScript : NetworkBehaviour
         // Phát tiếng bắn từ AudioSource
         if (audioSource != null)
         {
-            audioSource.Play(); // Âm thanh đã gắn sẵn trong AudioSource
+            audioSource.Play();
         }
 
-        // Thêm lực cho đạn
-        if (Camera.main != null)
-        {
-            Vector3 cameraForward = Camera.main.transform.forward;
-            cameraForward.y = 0;
-            cameraForward.Normalize();
-            bullet.GetComponent<Rigidbody>().AddForce(cameraForward * 20f, ForceMode.Impulse);
-
-            StartCoroutine(DespawnBulletAfterDelay(bullet, 3f));
-        }
+        // Chỉ cần spawn, không cần AddForce nữa
+        StartCoroutine(DespawnBulletAfterDelay(bullet, 3f));
     }
 
     IEnumerator TextThongBao(float delay)
@@ -131,9 +139,9 @@ public class GunScript : NetworkBehaviour
 
     void UpdateEnergyUI()
     {
-        if (energySlider != null)
+        if (_manaPlayerSlider != null)
         {
-            energySlider.value = currentEnergy;
+            _manaPlayerSlider.value = currentEnergy;
         }
 
         // _manaPlayerSlider.value = currentEnergy;

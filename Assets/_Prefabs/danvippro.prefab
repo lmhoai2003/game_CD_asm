@@ -24261,6 +24261,7 @@ GameObject:
   - component: {fileID: 5993279870153642271}
   - component: {fileID: 2049645391041164116}
   - component: {fileID: 750366020045236566}
+  - component: {fileID: 5636600143975660292}
   m_Layer: 0
   m_Name: danvippro
   m_TagString: viendan
@@ -29179,6 +29180,7 @@ MonoBehaviour:
   NestedObjects: []
   NetworkedBehaviours:
   - {fileID: 2049645391041164116}
+  - {fileID: 5636600143975660292}
   ForceRemoteRenderTimeframe: 0
 --- !u!54 &4982121095833167763
 Rigidbody:
@@ -29258,6 +29260,18 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   sphereCollider: {fileID: 5993279870153642271}
+--- !u!114 &5636600143975660292
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 8003699043593340488}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 493990e082f7b4644961371e4fb705b2, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
 --- !u!1001 &8367798331227036117
 PrefabInstance:
   m_ObjectHideFlags: 0
