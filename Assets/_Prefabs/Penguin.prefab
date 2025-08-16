@@ -213,7 +213,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 69ade20079243ce48909f955b280bba9, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  __hpEnemy: 100
+  __hpEnemy: 50
   hpText: {fileID: 4325012066276841587}
   textThongBaoHaGuc: {fileID: 0}
   effectHit: {fileID: 6600695175971149374}

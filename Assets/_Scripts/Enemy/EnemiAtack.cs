@@ -10,7 +10,7 @@ public class EnemiAtack : NetworkBehaviour
     public float shootCooldown = 5f;
     public float detectionRange = 20f;
     private float shootTimer;
-    
+
     [SerializeField] private NavMeshAgent navMeshAgent;
     public GameObject[] targets;
     [SerializeField] private float distance;
@@ -89,3 +89,5 @@ public class EnemiAtack : NetworkBehaviour
         Runner.Spawn(bulletPrefabs, firePoint.position, rotation);
     }
 }
+
+

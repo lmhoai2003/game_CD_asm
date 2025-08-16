@@ -19,9 +19,24 @@ public class GunScript : NetworkBehaviour
     [SerializeField] private float timeMana = 0.1f;      // time hồi 1 lần
     [SerializeField] private int mana = 1;
     [SerializeField] private TextMeshProUGUI thongbaoText;
+    [SerializeField] private Slider _manaPlayerSlider;
 
-    private void Start()
+    // private void Start()
+    // {
+    //     currentEnergy = maxEnergy;
+    //     if (energySlider != null)
+    //     {
+    //         energySlider.maxValue = maxEnergy;
+    //         energySlider.value = currentEnergy;
+    //     }
+    // }
+    public override void Spawned()
     {
+
+        // _manaPlayerSlider = GameObject.Find("manaPlayer").GetComponent<Slider>();
+        // _manaPlayerSlider.value = maxEnergy;
+
+
         currentEnergy = maxEnergy;
         if (energySlider != null)
         {
@@ -29,6 +44,7 @@ public class GunScript : NetworkBehaviour
             energySlider.value = currentEnergy;
         }
     }
+
 
     public override void FixedUpdateNetwork()
     {
@@ -119,5 +135,7 @@ public class GunScript : NetworkBehaviour
         {
             energySlider.value = currentEnergy;
         }
+
+        // _manaPlayerSlider.value = currentEnergy;
     }
 }

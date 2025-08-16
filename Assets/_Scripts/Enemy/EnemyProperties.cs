@@ -7,7 +7,7 @@ using System.Collections;
 public class EnemyProperties : NetworkBehaviour
 {
     [Networked, OnChangedRender(nameof(OnHPChangedEnemy))]
-    public int _hpEnemy { get; set; } = 10;
+    public int _hpEnemy { get; set; } = 100;
 
     public TextMeshPro hpText;
     public TextMeshProUGUI textThongBaoHaGuc;
@@ -15,7 +15,7 @@ public class EnemyProperties : NetworkBehaviour
     public override void Spawned()
     {
         hpText.text = _hpEnemy.ToString();
-        textThongBaoHaGuc = GameObject.Find("tmp_haguc").GetComponent<TextMeshProUGUI>();
+        // textThongBaoHaGuc = GameObject.Find("tmp_haguc").GetComponent<TextMeshProUGUI>();
     }
 
     public void OnHPChangedEnemy()
