@@ -971,7 +971,7 @@ RectTransform:
   m_AnchorMin: {x: 0.5, y: 0.5}
   m_AnchorMax: {x: 0.5, y: 0.5}
   m_AnchoredPosition: {x: -42, y: -360}
-  m_SizeDelta: {x: 1200, y: 100}
+  m_SizeDelta: {x: 1800, y: 100}
   m_Pivot: {x: 0.5, y: 0.5}
 --- !u!114 &1257970211
 MonoBehaviour:
@@ -996,7 +996,7 @@ MonoBehaviour:
   m_text: "Vui l\xF2ng ch\u1ECDn nh\xE2n v\u1EADt tr\u01B0\u1EDBc khi ch\u01A1i!"
   m_isRightToLeft: 0
   m_fontAsset: {fileID: 11400000, guid: 2ed374a4fe8b81643acb1b3ef0df1410, type: 2}
-  m_sharedMaterial: {fileID: 2180264, guid: 8f586378b4e144a9851e7b34d9b748ee, type: 2}
+  m_sharedMaterial: {fileID: 8741167530365231881, guid: 2ed374a4fe8b81643acb1b3ef0df1410, type: 2}
   m_fontSharedMaterials: []
   m_fontMaterial: {fileID: 0}
   m_fontMaterials: []

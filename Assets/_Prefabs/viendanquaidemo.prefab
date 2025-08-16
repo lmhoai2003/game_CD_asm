@@ -16,7 +16,7 @@ GameObject:
   - component: {fileID: 277287599436394670}
   m_Layer: 0
   m_Name: viendanquaidemo
-  m_TagString: viendan
+  m_TagString: viendanquai
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0

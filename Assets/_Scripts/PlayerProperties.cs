@@ -1,121 +1,3 @@
-
-// using UnityEngine;
-// using TMPro;
-// using Fusion;
-// using UnityEngine.UI;
-// using System.Collections;
-// using UnityEngine.SceneManagement;
-
-// public class PlayerProperties : NetworkBehaviour
-// {
-//     [Networked, OnChangedRender(nameof(OnHPChanged))]
-//     public int _hpPlayer { get; set; } = 100;
-
-//     public TextMeshPro hpText;
-//     [SerializeField] private Animator animator;
-//     [SerializeField] private Slider hpSlider;
-//     [SerializeField] private TextMeshProUGUI nameTextUI;
-//     private bool checkdie = false;
-
-//     [SerializeField] private RawImage imageThua;
-//     [SerializeField] private RawImage iamgeThang;
-//     [SerializeField] private NetworkBehaviour movementScript;
-//     [SerializeField] private Button loadSceneHomeButton;
-
-//     public void OnHPChanged()
-//     {
-//         // Chỉ cập nhật UI máu cho player mình điều khiển
-//         if (Object.HasInputAuthority)
-//         {
-//             if (hpText != null) hpText.text = _hpPlayer.ToString();
-//             if (hpSlider != null) hpSlider.value = _hpPlayer;
-//         }
-//     }
-
-//     public override void FixedUpdateNetwork()
-//     {
-
-//     }
-
-//     public override void Spawned()
-//     {
-//         loadSceneHomeButton.onClick.AddListener(() =>
-//         {
-//             SceneManager.LoadScene("MenuScene");
-//         });
-//         nameTextUI.text = PlayerPrefs.GetString("name");
-
-
-//     }
-
-//     private void DisableMovement()
-//     {
-//         if (movementScript != null)
-//         {
-//             movementScript.enabled = false;
-//         }
-//     }
-
-
-//     public void OnTriggerEnter(Collider other)
-//     {
-//         if (!Object.HasStateAuthority) return; // Chỉ xử lý damage ở server/state authority
-
-//         if (other.CompareTag("viendan"))
-//         {
-//             _hpPlayer -= 5;
-//             if (_hpPlayer <= 0)
-//             {
-//                 _hpPlayer = 0;
-//                 if (!checkdie)
-//                 {
-//                     checkdie = true;
-//                     RPC_Die(); // gọi RPC để mọi client thấy animation
-//                 }
-//             }
-//             else
-//             {
-//                 RPC_Hit();
-//             }
-//         }
-//     }
-
-//     [Rpc(RpcSources.StateAuthority, RpcTargets.All)]
-//     void RPC_Die()
-//     {
-//         animator.SetTrigger("die");
-
-//         //tắt  tag Player
-//         if (Object.HasStateAuthority)
-//         {
-//             gameObject.tag = "Untagged"; // tắt tag Player
-//         }
-
-//         if (Object.HasInputAuthority) // chỉ player mình mới khóa di chuyển và hiện thua
-//         {
-//             DisableMovement();
-//             StartCoroutine(ThuaDelay(3f));
-//         }
-//     }
-
-//     [Rpc(RpcSources.StateAuthority, RpcTargets.All)]
-//     void RPC_Hit()
-//     {
-//         animator.SetTrigger("hitdame");
-//     }
-
-//     private IEnumerator ThuaDelay(float time)
-//     {
-
-//         yield return new WaitForSeconds(time);
-//         if (imageThua != null) imageThua.gameObject.SetActive(true);
-//         loadSceneHomeButton.gameObject.SetActive(true);
-//     }
-
-
-// }
-
-
 using UnityEngine;
 using TMPro;
 using Fusion;
@@ -129,12 +11,11 @@ public class PlayerProperties : NetworkBehaviour
     [Networked, OnChangedRender(nameof(OnHPChanged))]
     public int _hpPlayer { get; set; } = 100;
 
-    // [Networked, OnChangedRender(nameof(SoLuongQuaiConLai))]
-    // public int _countQuai { get; set; }
-
     public TextMeshPro hpText;
     [SerializeField] private Animator animator;
-    [SerializeField] private Slider hpSlider;
+    // [SerializeField] private Slider hpSlider;
+
+    [SerializeField] private Slider _hpSliderScene;
     [SerializeField] private TextMeshProUGUI nameTextUI;
     private bool checkdie = false;
 
@@ -142,17 +23,57 @@ public class PlayerProperties : NetworkBehaviour
     [SerializeField] private RawImage imageThang;
     [SerializeField] private NetworkBehaviour movementScript;
     [SerializeField] private Button loadSceneHomeButton;
-    [SerializeField] private TextMeshProUGUI textThongBaoSoLuongEnemy;
 
-    private bool hasWon = false; // Đảm bảo hiệu ứng Win chỉ chạy 1 lần
+    [SerializeField] private RawImage lowHpOverlay; // UI màu đỏ cảnh báo
+    private Coroutine lowHpCoroutine;
+
 
     public void OnHPChanged()
     {
-        // Chỉ cập nhật UI máu cho player mình điều khiển
         if (Object.HasInputAuthority)
         {
             if (hpText != null) hpText.text = _hpPlayer.ToString();
-            if (hpSlider != null) hpSlider.value = _hpPlayer;
+            // if (hpSlider != null) hpSlider.value = _hpPlayer;
+            _hpSliderScene.value = _hpPlayer;
+
+            // Kiểm tra HP thấp
+            if (_hpPlayer < 30)
+            {
+                if (lowHpOverlay != null && lowHpCoroutine == null)
+                {
+                    lowHpOverlay.gameObject.SetActive(true);
+                    lowHpCoroutine = StartCoroutine(LowHpFlash());
+                }
+            }
+            else
+            {
+                if (lowHpOverlay != null)
+                {
+                    lowHpOverlay.gameObject.SetActive(false);
+                    if (lowHpCoroutine != null)
+                    {
+                        StopCoroutine(lowHpCoroutine);
+                        lowHpCoroutine = null;
+                    }
+                }
+            }
+        }
+    }
+
+    private IEnumerator LowHpFlash()
+    {
+        CanvasGroup cg = lowHpOverlay.GetComponent<CanvasGroup>();
+        if (cg == null)
+        {
+            cg = lowHpOverlay.gameObject.AddComponent<CanvasGroup>();
+        }
+
+        while (true)
+        {
+            // Alpha dao động từ 0 -> 0.5 trong 1s
+            float alpha = Mathf.PingPong(Time.time * 2f, 0.5f);
+            cg.alpha = alpha;
+            yield return null;
         }
     }
 
@@ -162,9 +83,10 @@ public class PlayerProperties : NetworkBehaviour
         {
             SceneManager.LoadScene("MenuScene");
         });
+
         nameTextUI.text = PlayerPrefs.GetString("name");
-        // _checkSlEnemy = GameObject.FindGameObjectsWithTag("Emeny").Count();
-        // textThongBaoSoLuongEnemy.text = "Quái tinh anh cấp 1 đã bị tiêu diệt";
+
+        _hpSliderScene = GameObject.Find("hpPlayer").GetComponent<Slider>();
 
     }
 
@@ -178,9 +100,9 @@ public class PlayerProperties : NetworkBehaviour
 
     public void OnTriggerEnter(Collider other)
     {
-        if (!Object.HasStateAuthority) return; // Chỉ xử lý damage ở server/state authority
+        if (!Object.HasStateAuthority) return;
 
-        if (other.CompareTag("viendan"))
+        if (other.CompareTag("viendanquai"))
         {
             _hpPlayer -= 5;
             if (_hpPlayer <= 0)
@@ -189,7 +111,7 @@ public class PlayerProperties : NetworkBehaviour
                 if (!checkdie)
                 {
                     checkdie = true;
-                    RPC_Die(); // gọi RPC để mọi client thấy animation
+                    RPC_Die();
                 }
             }
             else
@@ -204,7 +126,6 @@ public class PlayerProperties : NetworkBehaviour
     {
         animator.SetTrigger("die");
 
-        // tắt tag Player
         if (Object.HasStateAuthority)
         {
             gameObject.tag = "Untagged";
@@ -223,36 +144,13 @@ public class PlayerProperties : NetworkBehaviour
         animator.SetTrigger("hitdame");
     }
 
+
+
     private IEnumerator ThuaDelay(float time)
     {
         yield return new WaitForSeconds(time);
         if (imageThua != null) imageThua.gameObject.SetActive(true);
         loadSceneHomeButton.gameObject.SetActive(true);
-    }
-
-    private void Update()
-    {
-        if (!Object.HasInputAuthority) return; // Chỉ player điều khiển mới check win
-
-        if (!hasWon && GameObject.FindGameObjectsWithTag("Emeny").Length == 0)
-        {
-            hasWon = true;
-            ShowWinScreen();
-        }
-        // _checkSlEnemy = GameObject.FindGameObjectsWithTag("Emeny").Length;
-        // if (_checkSlEnemy< _countQuai)
-        // {
-        //     _countQuai = _checkSlEnemy;
-        // }
-
-        int timeHoiMau = Random.Range(1, 150);
-        if (timeHoiMau >= 149 && _hpPlayer <= 95)
-        {
-            int hpHoi = Random.Range(1, 5);
-            _hpPlayer += hpHoi;
-        }
-
-
     }
 
     private void ShowWinScreen()
@@ -261,9 +159,20 @@ public class PlayerProperties : NetworkBehaviour
         loadSceneHomeButton.gameObject.SetActive(true);
         DisableMovement();
     }
-    private IEnumerator HideTextThongBao(float time)
+
+    public override void FixedUpdateNetwork()
     {
-        yield return new WaitForSeconds(time);
-        textThongBaoSoLuongEnemy.gameObject.SetActive(false);
+        //hồi 2 máu mỗi giây
+        if (Object.HasStateAuthority && _hpPlayer <= 98)
+        {
+            int checkHoimau = Random.Range(1, 200);
+
+            if (checkHoimau >= 195 && _hpPlayer < 100)
+            {
+                int hpHoi = Random.Range(1, 2);
+                _hpPlayer += hpHoi;
+            }
+
+        }
     }
 }
