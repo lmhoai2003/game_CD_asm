@@ -172,13 +172,11 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: ce9c11151ac756c4f9525665d213a179, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  bulletPrefabs: {fileID: 6339676092503196882, guid: 04008b9e2691880449ba93042273772c, type: 3}
+  bulletPrefab: {fileID: 6339676092503196882, guid: 04008b9e2691880449ba93042273772c, type: 3}
   firePoint: {fileID: 4038302084254495792}
   shootCooldown: 4
   detectionRange: 20
   navMeshAgent: {fileID: 1076361179954361102}
-  targets: []
-  distance: 13
 --- !u!195 &1076361179954361102
 NavMeshAgent:
   m_ObjectHideFlags: 0
@@ -402,7 +400,7 @@ Transform:
   m_GameObject: {fileID: 4074736828529143162}
   serializedVersion: 2
   m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
-  m_LocalPosition: {x: 0, y: 1.08, z: 0.382}
+  m_LocalPosition: {x: 0, y: 1.352, z: 0.687}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_ConstrainProportionsScale: 0
   m_Children: []
