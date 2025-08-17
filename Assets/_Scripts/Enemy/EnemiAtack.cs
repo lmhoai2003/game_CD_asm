@@ -29,7 +29,7 @@ public class EnemyAttack : NetworkBehaviour
         {
             float d = Vector3.Distance(p.transform.position, transform.position);
             if (d < minDistance)
-            { 
+            {
                 minDistance = d;
                 target = p;
             }
@@ -53,11 +53,11 @@ public class EnemyAttack : NetworkBehaviour
         }
 
         // Enemy bắn
-        shootTimer += Runner.DeltaTime;
-        if (shootTimer >= 0f && minDistance <= detectionRange)
+        shootTimer -= Time.deltaTime;
+        if (shootTimer <= 0f && minDistance <= detectionRange)
         {
             RPC_Shoot(target.transform.position);
-            shootTimer =  0f;
+            shootTimer = shootCooldown;
         }
     }
 
