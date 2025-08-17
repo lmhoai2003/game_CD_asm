@@ -205,6 +205,8 @@ public class NumberOfPlayers : NetworkBehaviour
             playerCount = Runner.ActivePlayers.Count();
             previousPlayers = Runner.ActivePlayers.ToList();
             enemyCount = GameObject.FindGameObjectsWithTag("Emeny").Length;
+            
+
         }
 
         UpdatePlayerCountUI();

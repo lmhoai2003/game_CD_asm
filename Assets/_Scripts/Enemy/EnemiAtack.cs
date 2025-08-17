@@ -10,6 +10,7 @@ public class EnemyAttack : NetworkBehaviour
     public float shootCooldown = 3f;  //time hồi chiêu
     public float detectionRange = 20f;  // khoảng cách phát hiện player
     private float shootTimer;
+    [SerializeField] private Animator animator;
 
     [SerializeField] private NavMeshAgent navMeshAgent;
 
@@ -62,11 +63,12 @@ public class EnemyAttack : NetworkBehaviour
     }
 
     [Rpc(RpcSources.All, RpcTargets.All)]
-    public void  RPC_Shoot(Vector3 targetPos)
+    public void RPC_Shoot(Vector3 targetPos)
     {
         Vector3 dir = (targetPos - firePoint.position).normalized;
         Quaternion rot = Quaternion.LookRotation(dir);
 
         Runner.Spawn(bulletPrefab, firePoint.position, rot, Object.InputAuthority);
+        animator.SetTrigger("enemyAttack");
     }
 }

@@ -1,19 +1,25 @@
+
 using UnityEngine;
 using Fusion;
 using System.Collections;
 using TMPro;
+using UnityEngine.AI;
+using System;
+using Unity.VisualScripting;
 
 public class EnemyProperties : NetworkBehaviour
 {
-    [Networked, OnChangedRender(nameof(OnHPChangedEnemy))]
-    public int _hpEnemy { get; set; } = 100;
 
+    [SerializeField] private int _hpEnemy { get; set; } = 30;
     [SerializeField] private TextMeshPro hpText;
-    [SerializeField] private TextMeshProUGUI textThongBaoHaGuc;
     [SerializeField] private GameObject effectHit;
+    [SerializeField] private Animator animator;
 
     private bool _spawned;
-    private int _pendingDamage;     // dồn damage từ va chạm (không đụng networked prop ở đây)
+    private int _pendingDamage;     // dồn damage từ va chạm 
+
+    [SerializeField] private NavMeshAgent navMeshAgent;
+    public bool isDie = false;
 
     public override void Spawned()
     {
@@ -21,9 +27,16 @@ public class EnemyProperties : NetworkBehaviour
         if (hpText) hpText.text = _hpEnemy.ToString();
     }
 
-    public void OnHPChangedEnemy()
+    [Rpc(RpcSources.All, RpcTargets.All)]
+    public void RPC_OnHPChangedEnemy()
     {
-        if (hpText) hpText.text = _hpEnemy.ToString();
+        _pendingDamage += 10;
+        if (_pendingDamage > 0)
+        {
+            _hpEnemy = Mathf.Max(0, _hpEnemy - _pendingDamage);
+            _pendingDamage = 0;
+        }
+        hpText.text = _hpEnemy.ToString();
     }
 
     private void OnTriggerEnter(Collider other)
@@ -32,12 +45,11 @@ public class EnemyProperties : NetworkBehaviour
         if (!_spawned) return;
 
         // Đạn của bạn dùng tag "viendan"
-        if (!other.CompareTag("viendan")) return;
+        if (other.gameObject.CompareTag("viendan"))
+        {
+            RPC_OnHPChangedEnemy();
+        }
 
-        // ❌ Không được đụng _hpEnemy ở đây
-        _pendingDamage += 10;
-
-        // Hiệu ứng local cho client nào cũng chạy
         if (effectHit)
         {
             effectHit.SetActive(true);
@@ -48,6 +60,8 @@ public class EnemyProperties : NetworkBehaviour
         // var bulletNO = other.GetComponentInParent<NetworkObject>();
         // if (bulletNO && bulletNO.IsValid) Runner.Despawn(bulletNO);
     }
+
+
 
     private IEnumerator HideHitFx(float t)
     {
@@ -64,19 +78,27 @@ public class EnemyProperties : NetworkBehaviour
             hpText.transform.Rotate(0, 180, 0);
         }
 
-        // Chỉ StateAuthority được ghi networked prop
-        if (!HasStateAuthority) return;
-
-        if (_pendingDamage > 0)
+        if (_hpEnemy <= 0)
         {
-            // ✅ Truy cập/ghi _hpEnemy TRONG tick mạng
-            _hpEnemy = Mathf.Max(0, _hpEnemy - _pendingDamage);
-            _pendingDamage = 0;
-
-            if (_hpEnemy == 0)
+            //tắt script EnemyAttack và navMeshAgent
+            var enemyAttack = GetComponent<EnemyAttack>();
+            if (enemyAttack != null && isDie == false)
             {
-                Runner.Despawn(Object);
+                enemyAttack.enabled = false;
+                navMeshAgent.enabled = false;
+                RPC_Die();
             }
+
         }
+    }
+
+    [Rpc(RpcSources.All, RpcTargets.All)]
+    void RPC_Die()
+    {
+        if (isDie == false) { animator.SetBool("enemyDie", true); }
+        isDie = true;
+
+        gameObject.tag = "Untagged";//tắt tag để người chơi không bắn được nữa
+        hpText.gameObject.SetActive(false);
     }
 }
