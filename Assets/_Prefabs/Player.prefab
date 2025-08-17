@@ -2053,7 +2053,7 @@ GameObject:
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
-  m_IsActive: 1
+  m_IsActive: 0
 --- !u!224 &5193793960648982904
 RectTransform:
   m_ObjectHideFlags: 0
@@ -3840,7 +3840,6 @@ GameObject:
   - component: {fileID: 8621322640817681406}
   - component: {fileID: 389100311414911215}
   - component: {fileID: 3754833437355106061}
-  - component: {fileID: 4002016691129969848}
   m_Layer: 0
   m_Name: Player
   m_TagString: Player
@@ -3936,7 +3935,6 @@ MonoBehaviour:
   - {fileID: 8617318114219842649}
   - {fileID: 8621322640817681406}
   - {fileID: 389100311414911215}
-  - {fileID: 4002016691129969848}
   ForceRemoteRenderTimeframe: 0
 --- !u!114 &5882283657082879639
 MonoBehaviour:
@@ -4025,10 +4023,7 @@ MonoBehaviour:
   animator: {fileID: 595669424582060220}
   _hpSliderScene: {fileID: 0}
   nameTextUI: {fileID: 6033281452600408900}
-  imageThua: {fileID: 6709808362846370366}
-  imageThang: {fileID: 7581117834979778157}
   movementScript: {fileID: 7290157816885031150}
-  loadSceneHomeButton: {fileID: 2908219388346492149}
   lowHpOverlay: {fileID: 0}
 --- !u!114 &8621322640817681406
 MonoBehaviour:
@@ -4165,22 +4160,6 @@ AudioSource:
     m_PreInfinity: 2
     m_PostInfinity: 2
     m_RotationOrder: 4
---- !u!114 &4002016691129969848
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 7203289513955639889}
-  m_Enabled: 0
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 4075fe8e4a6093346b4fb94297cfde1e, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
-  _HP: 100
-  _Mana: 100
-  maxHp: 100
-  maxMana: 100
 --- !u!1 &7258123897660386658
 GameObject:
   m_ObjectHideFlags: 0

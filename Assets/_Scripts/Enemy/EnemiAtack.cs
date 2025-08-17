@@ -3,91 +3,70 @@ using UnityEngine;
 using Fusion;
 using UnityEngine.AI;
 
-public class EnemiAtack : NetworkBehaviour
+public class EnemyAttack : NetworkBehaviour
 {
-    public NetworkObject bulletPrefabs;
+    public NetworkObject bulletPrefab;
     public Transform firePoint;
-    public float shootCooldown = 5f;
-    public float detectionRange = 20f;
+    public float shootCooldown = 3f;  //time hồi chiêu
+    public float detectionRange = 20f;  // khoảng cách phát hiện player
     private float shootTimer;
 
     [SerializeField] private NavMeshAgent navMeshAgent;
-    public GameObject[] targets;
-    [SerializeField] private float distance;
 
     public override void FixedUpdateNetwork()
     {
         if (!Object.HasStateAuthority) return;
 
-        targets = GameObject.FindGameObjectsWithTag("Player");
-        if (targets.Length == 0) return;
+        // Lấy danh sách player (chỉ cần 1 lần trong PlayerManager)
+        var players = GameObject.FindGameObjectsWithTag("Player");
+        if (players.Length == 0) return;
 
-        // Tính khoảng cách đến mục tiêu gần nhất
+        // Chọn player gần nhất
         GameObject target = null;
         float minDistance = Mathf.Infinity;
-        foreach (var t in targets)
+
+        foreach (var p in players)
         {
-            var distance = Vector3.Distance(t.transform.position, transform.position);
-            if (distance < minDistance)
+            float d = Vector3.Distance(p.transform.position, transform.position);
+            if (d < minDistance)
             {
-                minDistance = distance;
-                target = t;
+                minDistance = d;
+                target = p;
             }
         }
 
-        // Luôn xoay về player gần nhất
-        Vector3 lookDir = (target.transform.position - transform.position).normalized;
-        lookDir.y = 0; // giữ hướng xoay trên mặt phẳng
-        if (lookDir != Vector3.zero)
-        {
-            Quaternion lookRotation = Quaternion.LookRotation(lookDir);
-            transform.rotation = Quaternion.Slerp(transform.rotation, lookRotation, Time.deltaTime * 5f);
-        }
+        if (target == null) return;
 
-        if (target != null && minDistance <= distance)
+        // Enemy quay mặt
+        Vector3 lookDir = (target.transform.position - transform.position).normalized;
+        lookDir.y = 0;
+        transform.rotation = Quaternion.Slerp(transform.rotation, Quaternion.LookRotation(lookDir), Time.deltaTime * 5f);
+
+        // Enemy di chuyển
+        if (minDistance <= detectionRange)
         {
             navMeshAgent.SetDestination(target.transform.position);
         }
         else
         {
-            navMeshAgent.ResetPath(); // dừng lại nếu quá xa
+            navMeshAgent.ResetPath();
         }
 
-
-
-
-
-
-
+        // Enemy bắn
         shootTimer -= Time.deltaTime;
-
-        // Raycast từ enemy về phía trước
-        Ray ray = new Ray(transform.position + Vector3.up, transform.forward);
-        RaycastHit hit;
-
-        if (Physics.Raycast(ray, out hit, detectionRange))
+        if (shootTimer <= 0f && minDistance <= detectionRange)
         {
-            if (hit.collider.CompareTag("Player"))
-            {
-                if (shootTimer <= 0f)
-                {
-                    ShootAtPlayer(hit.collider.transform.position);
-                    shootTimer = shootCooldown;
-                }
-            }
+            RPC_Shoot(target.transform.position);
+            shootTimer = shootCooldown;
         }
-
-
-
     }
 
-    void ShootAtPlayer(Vector3 targetPos)
+    [Rpc(RpcSources.All, RpcTargets.All)]
+    public void  RPC_Shoot(Vector3 targetPos)
     {
-        Vector3 direction = (targetPos - firePoint.position).normalized;
-        Quaternion rotation = Quaternion.LookRotation(direction);
+        Vector3 dir = (targetPos - firePoint.position).normalized;
+        Quaternion rot = Quaternion.LookRotation(dir);
 
-        Runner.Spawn(bulletPrefabs, firePoint.position, rotation);
+        Runner.Spawn(bulletPrefab, firePoint.position, rot, Object.InputAuthority);
     }
 }
-
-

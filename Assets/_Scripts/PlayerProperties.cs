@@ -13,19 +13,15 @@ public class PlayerProperties : NetworkBehaviour
 
     public TextMeshPro hpText;
     [SerializeField] private Animator animator;
-    // [SerializeField] private Slider hpSlider;
 
     [SerializeField] private Slider _hpSliderScene;
     [SerializeField] private TextMeshProUGUI nameTextUI;
     private bool checkdie = false;
+    [SerializeField] private PlayerMovement movementScript;
 
-    [SerializeField] private RawImage imageThua;
-    [SerializeField] private RawImage imageThang;
-    [SerializeField] private NetworkBehaviour movementScript;
-    [SerializeField] private Button loadSceneHomeButton;
 
     [SerializeField] private RawImage lowHpOverlay; // UI màu đỏ cảnh báo
-    private Coroutine lowHpCoroutine;
+
 
 
     public void OnHPChanged()
@@ -37,26 +33,7 @@ public class PlayerProperties : NetworkBehaviour
             _hpSliderScene.value = _hpPlayer;
 
             // Kiểm tra HP thấp
-            if (_hpPlayer < 30)
-            {
-                if (lowHpOverlay != null && lowHpCoroutine == null)
-                {
-                    lowHpOverlay.gameObject.SetActive(true);
-                    lowHpCoroutine = StartCoroutine(LowHpFlash());
-                }
-            }
-            else
-            {
-                if (lowHpOverlay != null)
-                {
-                    lowHpOverlay.gameObject.SetActive(false);
-                    if (lowHpCoroutine != null)
-                    {
-                        StopCoroutine(lowHpCoroutine);
-                        lowHpCoroutine = null;
-                    }
-                }
-            }
+             
         }
     }
 
@@ -70,7 +47,6 @@ public class PlayerProperties : NetworkBehaviour
 
         while (true)
         {
-            // Alpha dao động từ 0 -> 0.5 trong 1s
             float alpha = Mathf.PingPong(Time.time * 2f, 0.5f);
             cg.alpha = alpha;
             yield return null;
@@ -79,15 +55,13 @@ public class PlayerProperties : NetworkBehaviour
 
     public override void Spawned()
     {
-        loadSceneHomeButton.onClick.AddListener(() =>
-        {
-            SceneManager.LoadScene("MenuScene");
-        });
 
-        nameTextUI.text = PlayerPrefs.GetString("name");
+
+
 
         _hpSliderScene = GameObject.Find("hpPlayer").GetComponent<Slider>();
-
+        nameTextUI = GameObject.Find("tmp_namePlayer").GetComponent<TextMeshProUGUI>();
+        nameTextUI.text = PlayerPrefs.GetString("name");
     }
 
     private void DisableMovement()
@@ -98,30 +72,29 @@ public class PlayerProperties : NetworkBehaviour
         }
     }
 
-    public void OnTriggerEnter(Collider other)
-    {
-        if (!Object.HasStateAuthority) return;
 
-        if (other.CompareTag("viendanquai"))
+    public void TakeDamage(int amount)
+{
+    if (!Object.HasStateAuthority) return;
+
+    _hpPlayer -= amount;
+    if (_hpPlayer <= 0)
+    {
+        _hpPlayer = 0;
+        if (!checkdie)
         {
-            _hpPlayer -= 5;
-            if (_hpPlayer <= 0)
-            {
-                _hpPlayer = 0;
-                if (!checkdie)
-                {
-                    checkdie = true;
-                    RPC_Die();
-                }
-            }
-            else
-            {
-                RPC_Hit();
-            }
+            checkdie = true;
+            RPC_Die();
         }
     }
+    else
+    {
+        RPC_Hit();
+    }
+}
 
-    [Rpc(RpcSources.StateAuthority, RpcTargets.All)]
+
+    [Rpc(RpcSources.All, RpcTargets.All)]
     void RPC_Die()
     {
         animator.SetTrigger("die");
@@ -134,34 +107,20 @@ public class PlayerProperties : NetworkBehaviour
         if (Object.HasInputAuthority)
         {
             DisableMovement();
-            StartCoroutine(ThuaDelay(3f));
         }
     }
 
-    [Rpc(RpcSources.StateAuthority, RpcTargets.All)]
+    [Rpc(RpcSources.All, RpcTargets.All)]
     void RPC_Hit()
     {
         animator.SetTrigger("hitdame");
     }
 
 
-
-    private IEnumerator ThuaDelay(float time)
-    {
-        yield return new WaitForSeconds(time);
-        if (imageThua != null) imageThua.gameObject.SetActive(true);
-        loadSceneHomeButton.gameObject.SetActive(true);
-    }
-
-    private void ShowWinScreen()
-    {
-        if (imageThang != null) imageThang.gameObject.SetActive(true);
-        loadSceneHomeButton.gameObject.SetActive(true);
-        DisableMovement();
-    }
-
     public override void FixedUpdateNetwork()
     {
+        // nếu hp <==0 thì không hồi máu
+        if (_hpPlayer <= 0) return;
         //hồi 2 máu mỗi giây
         if (Object.HasStateAuthority && _hpPlayer <= 98)
         {
@@ -175,4 +134,7 @@ public class PlayerProperties : NetworkBehaviour
 
         }
     }
+
+
+    
 }

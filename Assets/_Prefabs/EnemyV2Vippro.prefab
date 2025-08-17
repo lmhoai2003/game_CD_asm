@@ -1174,13 +1174,11 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: ce9c11151ac756c4f9525665d213a179, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  bulletPrefabs: {fileID: 6339676092503196882, guid: 04008b9e2691880449ba93042273772c, type: 3}
+  bulletPrefab: {fileID: 6339676092503196882, guid: 04008b9e2691880449ba93042273772c, type: 3}
   firePoint: {fileID: 2676580958276180802}
   shootCooldown: 5
   detectionRange: 20
   navMeshAgent: {fileID: 2206739587549456821}
-  targets: []
-  distance: 13
 --- !u!195 &2206739587549456821
 NavMeshAgent:
   m_ObjectHideFlags: 0
